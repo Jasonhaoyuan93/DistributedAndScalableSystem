@@ -3,7 +3,7 @@ package org.neu.cs6650.server.model;
 public class Request {
   private String swiper;
   private String swipee;
-  private String comments;
+  private String comment;
 
   public String getSwiper() {
     return swiper;
@@ -21,11 +21,11 @@ public class Request {
     this.swipee = swipee;
   }
 
-  public String getComments() {
-    return comments;
+  public String getComment() {
+    return comment;
   }
 
-  public void setComments(String comments) {
-    this.comments = comments;
+  public void setComment(String comment) {
+    this.comment = comment;
   }
 }

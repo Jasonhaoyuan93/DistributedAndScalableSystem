@@ -1,17 +1,18 @@
 package org.neu.cs6650.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
 import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.neu.cs6650.server.model.Request;
 import org.neu.cs6650.server.model.Response;
 
-@WebServlet(name = "TwinderServlet", value = "/TwinderServlet")
+@WebServlet(name = "org.neu.cs6650.server.TwinderServlet", value = "/org.neu.cs6650.server.TwinderServlet")
 public class TwinderServlet extends HttpServlet {
 
   private static final String INVALID_PATH_MESSAGE = "invalid path";
