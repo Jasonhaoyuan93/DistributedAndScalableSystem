@@ -1,5 +1,6 @@
 package org.neu.cs6650.client.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -7,12 +8,16 @@ public class Request {
   private String swiper;
   private String swipee;
   private String comment;
-
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String message;
 
   public Request(Random random) {
     swiper = String.valueOf(random.nextInt(1,5001));
     swipee = String.valueOf(random.nextInt(1,1000001));
     comment = RandomStringUtils.randomAlphabetic(15, 256);
+  }
+
+  public Request() {
   }
 
   public String getSwiper() {
@@ -37,5 +42,13 @@ public class Request {
 
   public void setComment(String comment) {
     this.comment = comment;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
   }
 }

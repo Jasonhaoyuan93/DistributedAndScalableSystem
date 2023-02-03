@@ -66,7 +66,7 @@ public class SummaryService implements Closeable {
   }
 
   public void addResponse(Response response){
-    if(response.isSuccess()){
+    if(response.isSucceed()){
       elapsedTimes.add(Math.toIntExact(response.getElapsedTime()));
       successCount.getAndIncrement();
     }else{

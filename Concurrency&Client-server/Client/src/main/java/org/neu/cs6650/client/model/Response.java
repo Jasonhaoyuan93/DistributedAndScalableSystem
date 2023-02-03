@@ -1,31 +1,24 @@
 package org.neu.cs6650.client.model;
 
-import org.apache.http.HttpResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.net.http.HttpResponse;
 
-public class Response implements Comparable<Response>{
+public class Response extends Request implements Comparable<Response>{
 
-  private HttpResponse httpResponse;
+  @JsonIgnore
+  private boolean isSucceed;
+  @JsonIgnore
   private long elapsedTime;
 
-  public Response(HttpResponse httpResponse, long elapsedTime) {
-    this.httpResponse = httpResponse;
-    this.elapsedTime = elapsedTime;
-  }
-
   public Response() {
-    this.elapsedTime = 0;
   }
 
-  public boolean isSuccess(){
-    return httpResponse!=null && httpResponse.getStatusLine().getStatusCode()==201;
+  public boolean isSucceed() {
+    return isSucceed;
   }
 
-  public HttpResponse getHttpResponse() {
-    return httpResponse;
-  }
-
-  public void setHttpResponse(HttpResponse httpResponse) {
-    this.httpResponse = httpResponse;
+  public void setSucceed(boolean succeed) {
+    isSucceed = succeed;
   }
 
   public long getElapsedTime() {

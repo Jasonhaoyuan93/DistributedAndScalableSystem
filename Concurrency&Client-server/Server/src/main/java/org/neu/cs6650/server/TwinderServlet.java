@@ -50,6 +50,7 @@ public class TwinderServlet extends HttpServlet {
       try{
         Request body = objectMapper.readValue(stringBuilder.toString(), Request.class);
         response.setStatus(HttpServletResponse.SC_CREATED);
+        response.getWriter().write(objectMapper.writeValueAsString(body));
       }catch (JsonProcessingException e){
         handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response(e.getMessage()));
       }

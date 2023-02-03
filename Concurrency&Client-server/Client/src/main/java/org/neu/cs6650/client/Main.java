@@ -27,18 +27,17 @@ public class Main {
 
     ExecutorService executorService = new ScheduledThreadPoolExecutor(threadCount);
 
-    try(HttpService leftHttpService = new HttpService(connectionCount / 2, host, ROUTE_LEFT);
-    HttpService rightHttpService = new HttpService(connectionCount / 2, host, ROUTE_RIGHT);
+    try(HttpService httpService = new HttpService(connectionCount, host);
     SummaryService summaryService = new SummaryService(new File("./out"))){
       CountDownLatch countDownLatch = new CountDownLatch(requestCount);
       long startTime = System.currentTimeMillis();
       for (int i = 0; i < requestCount; i++) {
         if (random.nextBoolean()) {
-          executorService.execute(new RequestThread(leftHttpService, summaryService,
-              objectMapper.writeValueAsString(new Request(random)), countDownLatch, random));
+          executorService.execute(new RequestThread(httpService, summaryService,
+              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_LEFT));
         } else {
-          executorService.execute(new RequestThread(rightHttpService, summaryService,
-              objectMapper.writeValueAsString(new Request(random)), countDownLatch,random));
+          executorService.execute(new RequestThread(httpService, summaryService,
+              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_RIGHT));
         }
       }
       executorService.shutdown();
