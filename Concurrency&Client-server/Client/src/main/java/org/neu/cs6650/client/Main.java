@@ -2,7 +2,6 @@ package org.neu.cs6650.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -18,19 +17,17 @@ public class Main {
   private static final Random random = new Random();
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
-  public static void main(String[] args) throws InterruptedException, IOException {
+  public static void main(String[] args){
 
     String host = args[0];
-    int connectionCount = Integer.parseInt(args[1]);
-    int threadCount = Integer.parseInt(args[2]);
-    int requestCount = Integer.parseInt(args[3]);
+    int threadCount = Integer.parseInt(args[1]);
+    int requestCount = Integer.parseInt(args[2]);
 
     ExecutorService executorService = new ScheduledThreadPoolExecutor(threadCount);
+    CountDownLatch countDownLatch = new CountDownLatch(requestCount);
 
-    try(HttpService httpService = new HttpService(connectionCount, host);
+    try(HttpService httpService = new HttpService(threadCount, host);
     SummaryService summaryService = new SummaryService(new File("./out"))){
-      CountDownLatch countDownLatch = new CountDownLatch(requestCount);
-      long startTime = System.currentTimeMillis();
       for (int i = 0; i < requestCount; i++) {
         if (random.nextBoolean()) {
           executorService.execute(new RequestThread(httpService, summaryService,
@@ -42,7 +39,7 @@ public class Main {
       }
       executorService.shutdown();
       countDownLatch.await();
-      summaryService.summarize(startTime, requestCount);
+      summaryService.summarize(requestCount);
     }catch (Exception e){
       e.printStackTrace();
     }

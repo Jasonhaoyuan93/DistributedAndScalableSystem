@@ -1,7 +1,6 @@
 package org.neu.cs6650.client.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.net.http.HttpResponse;
 
 public class Response extends Request implements Comparable<Response>{
 

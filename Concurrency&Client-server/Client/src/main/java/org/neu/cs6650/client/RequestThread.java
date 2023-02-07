@@ -31,10 +31,10 @@ public class RequestThread implements Runnable {
     try {
       Response response = httpService.processHttpRequest(requestBody, path);
       countDownLatch.countDown();
-      if(random.nextInt(10000)==1){
-        System.out.println("Request processed, current remaining: %s".formatted(countDownLatch.getCount()));
-      }
       summaryService.addResponse(response);
+      if(random.nextInt(50000)==1){
+        System.out.println("Request processing, current remaining: %s".formatted(countDownLatch.getCount()));
+      }
     } catch (IOException e) {
       e.printStackTrace();
       countDownLatch.countDown();

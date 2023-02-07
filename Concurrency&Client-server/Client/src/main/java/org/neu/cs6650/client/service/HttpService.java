@@ -34,15 +34,11 @@ public class HttpService implements Closeable {
     this.httpHost = new HttpHost(hostRoute, 8080);
     connectionManager.setMaxPerRoute(new HttpRoute(httpHost), connectionCount);
     this.httpClient = HttpClients.custom().setConnectionManager(connectionManager)
-        .addInterceptorLast(new HttpResponseInterceptor() {
-          @Override
-          public void process(HttpResponse httpResponse, HttpContext httpContext)
-              throws HttpException, IOException {
-            if (httpResponse.getStatusLine().getStatusCode() / 100 >= 4) {
-              System.out.println("retried");
-              throw new IOException("Retry with error status %d %s.".formatted(
-                  httpResponse.getStatusLine().getStatusCode(), httpResponse.getStatusLine().getReasonPhrase()));
-            }
+        .addInterceptorLast((HttpResponseInterceptor) (httpResponse, httpContext) -> {
+          if (httpResponse.getStatusLine().getStatusCode() / 100 >= 4) {
+            System.out.println("retried");
+            throw new IOException("Retry with error status %d %s.".formatted(
+                httpResponse.getStatusLine().getStatusCode(), httpResponse.getStatusLine().getReasonPhrase()));
           }
         })
         .setRetryHandler((exception, executionCount, context) -> executionCount < 5).build();
