@@ -1,6 +1,5 @@
 package org.neu.cs6650.client;
 
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import org.neu.cs6650.client.model.Response;
@@ -35,7 +34,7 @@ public class RequestThread implements Runnable {
       if(random.nextInt(50000)==1){
         System.out.println("Request processing, current remaining: %s".formatted(countDownLatch.getCount()));
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       countDownLatch.countDown();
       summaryService.addResponse(new Response());
