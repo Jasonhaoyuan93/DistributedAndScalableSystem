@@ -54,3 +54,13 @@ On EC2 instance with 350 threads and 350 connections
 
 ## Performance Plot
 ![Performance Plot](PerformancePlot.png)
+
+## Spring boot result
+Here's performance when I use spring boot to build the remote server. 
+
+![Spring boot performance plot](SpringbootClientScreenShot.png)
+
+Spring boot performance result is similar to the performance result when I use 120 threads in 
+my local client with customized servlet on remote server. Here's my client's performance result with 
+120 threads: 
+![Client with 120 threads](Client_120.png)
