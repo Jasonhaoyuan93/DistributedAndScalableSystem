@@ -1,4 +1,4 @@
-package org.neu.cs6650.springserver.springserver;
+package org.neu.cs6650.springserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

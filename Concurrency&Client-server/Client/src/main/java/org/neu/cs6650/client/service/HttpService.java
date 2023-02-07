@@ -27,7 +27,6 @@ public class HttpService implements Closeable {
 
   private CloseableHttpClient httpClient;
   private HttpHost httpHost;
-//  private String path;
 
   public HttpService(int connectionCount, String hostRoute) {
     PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
@@ -52,6 +51,7 @@ public class HttpService implements Closeable {
   public Response processHttpRequest(String requestBody, String path) throws IOException {
     HttpPost postRequest = new HttpPost(path);
     postRequest.setEntity(new StringEntity(requestBody));
+    postRequest.setHeader("Content-Type", "application/json");
     long startTime = System.currentTimeMillis();
     try(CloseableHttpResponse httpResponse = httpClient.execute(httpHost, postRequest)){
       long endTime = System.currentTimeMillis();

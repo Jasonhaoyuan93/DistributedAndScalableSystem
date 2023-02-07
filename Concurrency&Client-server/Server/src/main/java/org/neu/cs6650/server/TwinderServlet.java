@@ -56,7 +56,6 @@ public class TwinderServlet extends HttpServlet {
       }
     }
   }
-
   private boolean isSwipeRoute(String[] urlParts) {
     if(!"swipe".equalsIgnoreCase(urlParts[1])){
       return false;

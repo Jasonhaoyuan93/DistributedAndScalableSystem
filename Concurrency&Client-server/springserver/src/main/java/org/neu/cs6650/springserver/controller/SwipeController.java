@@ -1,9 +1,9 @@
-package org.neu.cs6650.springserver.springserver.controller;
+package org.neu.cs6650.springserver.controller;
 
 
-import org.neu.cs6650.springserver.springserver.model.Request;
-import org.neu.cs6650.springserver.springserver.model.Response;
-import org.neu.cs6650.springserver.springserver.service.ValidationService;
+import org.neu.cs6650.springserver.model.Request;
+import org.neu.cs6650.springserver.model.Response;
+import org.neu.cs6650.springserver.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class SwipeController {
     if(response!=null){
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(request, HttpStatus.CREATED);
   }
 
 }

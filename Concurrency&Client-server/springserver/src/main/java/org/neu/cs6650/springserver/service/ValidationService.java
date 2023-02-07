@@ -1,8 +1,8 @@
-package org.neu.cs6650.springserver.springserver.service;
+package org.neu.cs6650.springserver.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.neu.cs6650.springserver.springserver.model.Request;
-import org.neu.cs6650.springserver.springserver.model.Response;
+import org.neu.cs6650.springserver.model.Request;
+import org.neu.cs6650.springserver.model.Response;
 import org.springframework.stereotype.Service;
 
 @Service

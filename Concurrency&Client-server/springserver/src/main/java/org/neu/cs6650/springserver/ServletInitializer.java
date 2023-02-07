@@ -1,4 +1,4 @@
-package org.neu.cs6650.springserver.springserver;
+package org.neu.cs6650.springserver;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

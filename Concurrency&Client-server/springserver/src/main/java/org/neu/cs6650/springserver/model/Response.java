@@ -1,4 +1,4 @@
-package org.neu.cs6650.springserver.springserver.model;
+package org.neu.cs6650.springserver.model;
 
 public class Response {
   private String message;

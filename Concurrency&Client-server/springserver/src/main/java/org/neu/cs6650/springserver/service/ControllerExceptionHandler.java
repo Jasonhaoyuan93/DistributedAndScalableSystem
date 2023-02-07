@@ -1,8 +1,8 @@
-package org.neu.cs6650.springserver.springserver.service;
+package org.neu.cs6650.springserver.service;
 
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.neu.cs6650.springserver.springserver.model.Response;
+import javax.servlet.http.HttpServletRequest;
+import org.neu.cs6650.springserver.model.Response;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
