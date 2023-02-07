@@ -62,5 +62,6 @@ Here's performance when I use spring boot to build the remote server.
 
 Spring boot performance result is similar to the performance result when I use 120 threads in 
 my local client with customized servlet on remote server. Here's my client's performance result with 
-120 threads: 
+120 threads:
+
 ![Client with 120 threads](Client_120.png)
