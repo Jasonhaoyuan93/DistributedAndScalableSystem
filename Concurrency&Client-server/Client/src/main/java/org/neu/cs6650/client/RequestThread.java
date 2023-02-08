@@ -29,8 +29,8 @@ public class RequestThread implements Runnable {
   public void run() {
     try {
       Response response = httpService.processHttpRequest(requestBody, path);
-      countDownLatch.countDown();
       summaryService.addResponse(response);
+      countDownLatch.countDown();
       if(random.nextInt(50000)==1){
         System.out.println("Request processing, current remaining: %s".formatted(countDownLatch.getCount()));
       }

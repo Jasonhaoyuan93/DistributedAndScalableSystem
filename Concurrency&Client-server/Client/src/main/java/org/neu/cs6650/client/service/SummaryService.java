@@ -25,7 +25,6 @@ public class SummaryService implements Closeable {
 
   private static final String OUTPUT_FILENAME_FORMAT = "%s/Store.csv";
   private static final String LINE_FORMAT = "%d,%d\n";
-  private static final String ERROR_MSG = "request failed\n";
   private AtomicInteger successCount;
   private AtomicInteger failedCount;
   private List<TimeStore> elapsedTimes;
@@ -55,7 +54,7 @@ public class SummaryService implements Closeable {
     System.out.println("Overall elapsed time: %d ms".formatted(totalElapsedTime));
     System.out.println("Total recorded stored: %d".formatted(elapsedTimes.size()));
 
-    System.out.println("Throughput: %d req/sec".formatted(count / (totalElapsedTime / 1000)));
+    System.out.println("Throughput: %d req/sec".formatted(count*1000 / totalElapsedTime));
     System.out.println("Mean response time: 2%f ms".formatted(
         elapsedTimes.stream().mapToInt(TimeStore::getElapsedTime).average().getAsDouble()));
     System.out.println("Median response time: %d ms".formatted(calculateMedian()));
