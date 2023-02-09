@@ -4,7 +4,7 @@ Repository link: [Concurrency&Client-server](https://github.com/Jasonhaoyuan93/D
 
 ### Execute instructions
 
-To executor this application from IDE, you can create a "Run Configuration". 
+Both part 1 and part 2 can be executed with the same instructions below. To execute this application from IDE, you can create a "Run Configuration". 
 In Intellij, the run configuration needs to use JDK 17 with main class point to 
 org.neu.cs6650.client.Main. Then you need to fill the CLI argument with the following 
 parameters: 
@@ -46,11 +46,27 @@ org.neu.cs6650.service package.
 ### UML Document
 ![UML image](UML.png)
 
-## Client example report (Client 1 & 2)
-### Regular Tail
-On EC2 instance with 350 threads and 350 connections
+## Client statistics
+### Part 1
+Running client with 350 threads and 350 HTTP connections. Here's the example screen shot:
 
-![Regular Tail image](ClientScreenShot.png)
+![Part 1 image](Part1.jpg)
+
+### Part 2
+Running client with 350 threads and 350 HTTP connections. Here's the example screen shot:
+
+![Part 2 image](ClientScreenShot.png)
+
+Statistics for multiple trails: 
+
+|Overall elapsed time(Sec)|Throughtput (req/sec)|Mean response time(ms)|Median response time(ms)|P99 Response time(ms)|Min response time(ms)|Max response time(ms)|
+|------------------------|--------------------|----------------------|------------------------|-----------------|---------------------|---------------------|
+|51.976|9801|236.24|32|254|13|8059|
+|55.230|9053|238.55|31|257|12|11548|
+|53.468|9351|237.31|31|240|13|15131|
+|52.722|9483|236.81|31|76|12|15158|
+|53.019|9430|237.01|30|78|12|15146|
+|51.595|9690|236.01|30|72|13|15171|
 
 ## Performance Plot
 ![Performance Plot](PerformancePlot.png)
