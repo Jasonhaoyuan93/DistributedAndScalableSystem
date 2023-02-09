@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.neu.cs6650.server.model.Request;
 import org.neu.cs6650.server.model.Response;
 
@@ -49,8 +50,7 @@ public class TwinderServlet extends HttpServlet {
       }
       try{
         Request body = objectMapper.readValue(stringBuilder.toString(), Request.class);
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        response.getWriter().write(objectMapper.writeValueAsString(body));
+        isValidRequest(body,response);
       }catch (JsonProcessingException e){
         handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response(e.getMessage()));
       }
@@ -70,5 +70,27 @@ public class TwinderServlet extends HttpServlet {
     response.setContentType("application/json");
     response.setStatus(httpStatus);
     response.getWriter().write(objectMapper.writeValueAsString(payload));
+  }
+
+  private void isValidRequest(Request request, HttpServletResponse response) throws IOException {
+    if(StringUtils.isBlank(request.getSwipee())){
+      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Missing Swipee ID."));
+      return;
+    }
+    if(StringUtils.isBlank(request.getSwiper())){
+      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Missing Swiper ID."));
+      return;
+    }
+    if(StringUtils.isBlank(request.getComment())){
+      response.setStatus(HttpServletResponse.SC_CREATED);
+      response.getWriter().write(objectMapper.writeValueAsString(request));
+      return;
+    }
+    if(request.getComment().length()>256){
+      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Message length exceed 256."));
+      return;
+    }
+    response.setStatus(HttpServletResponse.SC_CREATED);
+    response.getWriter().write(objectMapper.writeValueAsString(request));
   }
 }
