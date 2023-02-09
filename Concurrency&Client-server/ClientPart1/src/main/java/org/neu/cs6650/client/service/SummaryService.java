@@ -30,8 +30,9 @@ public class SummaryService implements Closeable {
   private List<TimeStore> elapsedTimes;
   private final BufferedWriter outputStream;
   private final long startTime;
+  private final boolean isPartTwoEnabled;
 
-  public SummaryService(File directory) throws IOException {
+  public SummaryService(File directory, boolean isPartTwoEnabled) throws IOException {
     directory.mkdirs();
     File outputFile = new File(OUTPUT_FILENAME_FORMAT.formatted(directory.getAbsolutePath()));
     if (outputFile.exists()) {
@@ -42,6 +43,7 @@ public class SummaryService implements Closeable {
     outputStream = new BufferedWriter(new FileWriter(outputFile, true));
     successCount = new AtomicInteger(0);
     failedCount = new AtomicInteger(0);
+    this.isPartTwoEnabled = isPartTwoEnabled;
     startTime = System.currentTimeMillis();
   }
 
@@ -52,29 +54,30 @@ public class SummaryService implements Closeable {
     System.out.println(
         "Succeed count: %d. Failure count: %d".formatted(successCount.get(), failedCount.get()));
     System.out.println("Overall elapsed time: %d ms".formatted(totalElapsedTime));
-    System.out.println("Total recorded stored: %d".formatted(elapsedTimes.size()));
-
     System.out.println("Throughput: %d req/sec".formatted(count*1000 / totalElapsedTime));
-    System.out.println("Mean response time: 2%f ms".formatted(
-        elapsedTimes.stream().mapToInt(TimeStore::getElapsedTime).average().getAsDouble()));
-    System.out.println("Median response time: %d ms".formatted(calculateMedian()));
-    System.out.println("P99 response time: %d ms".formatted(calculatePercentile()));
-    System.out.println("Min response time: %d ms".formatted(calculateMin()));
-    System.out.println("Max response time: %d ms".formatted(calculateMax()));
-    //Generate plottable data
-    Map<Integer, Integer> occurrence = new HashMap<>();
-    elapsedTimes.forEach(val -> {
-      occurrence.putIfAbsent(val.getCurrentTime(), 0);
-      occurrence.put(val.getCurrentTime(), occurrence.get(val.getCurrentTime()) + 1);
-    });
-    //write to csv
-    occurrence.forEach((k,v)-> {
-      try {
-        outputStream.write(LINE_FORMAT.formatted(k,v));
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    });
+
+    if(isPartTwoEnabled){
+      System.out.println("Mean response time: 2%f ms".formatted(
+          elapsedTimes.stream().mapToInt(TimeStore::getElapsedTime).average().getAsDouble()));
+      System.out.println("Median response time: %d ms".formatted(calculateMedian()));
+      System.out.println("P99 response time: %d ms".formatted(calculatePercentile()));
+      System.out.println("Min response time: %d ms".formatted(calculateMin()));
+      System.out.println("Max response time: %d ms".formatted(calculateMax()));
+      //Generate plottable data
+      Map<Integer, Integer> occurrence = new HashMap<>();
+      elapsedTimes.forEach(val -> {
+        occurrence.putIfAbsent(val.getCurrentTime(), 0);
+        occurrence.put(val.getCurrentTime(), occurrence.get(val.getCurrentTime()) + 1);
+      });
+      //write to csv
+      occurrence.forEach((k,v)-> {
+        try {
+          outputStream.write(LINE_FORMAT.formatted(k,v));
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      });
+    }
   }
 
   public void addResponse(Response response) {

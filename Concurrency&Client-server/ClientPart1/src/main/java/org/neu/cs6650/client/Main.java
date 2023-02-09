@@ -16,8 +16,9 @@ public class Main {
   private static final String ROUTE_RIGHT = "/Server_war/twinder/swipe/right";
   private static final Random random = new Random();
   private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final boolean isPartTwoEnabled = false;
 
-  public static void main(String[] args){
+  public static void main(String[] args) {
 
     String host = args[0];
     int threadCount = Integer.parseInt(args[1]);
@@ -26,21 +27,23 @@ public class Main {
     ExecutorService executorService = new ScheduledThreadPoolExecutor(threadCount);
     CountDownLatch countDownLatch = new CountDownLatch(requestCount);
 
-    try(HttpService httpService = new HttpService(threadCount, host);
-    SummaryService summaryService = new SummaryService(new File("./out"))){
+    try (HttpService httpService = new HttpService(threadCount,
+        host); SummaryService summaryService = new SummaryService(new File("./out"), isPartTwoEnabled)) {
       for (int i = 0; i < requestCount; i++) {
         if (random.nextBoolean()) {
           executorService.execute(new RequestThread(httpService, summaryService,
-              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_LEFT));
+              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_LEFT,
+              isPartTwoEnabled));
         } else {
           executorService.execute(new RequestThread(httpService, summaryService,
-              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_RIGHT));
+              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_RIGHT,
+              isPartTwoEnabled));
         }
       }
       executorService.shutdown();
       countDownLatch.await();
       summaryService.summarize(requestCount);
-    }catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

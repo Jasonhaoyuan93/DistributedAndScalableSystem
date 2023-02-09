@@ -15,21 +15,25 @@ public class RequestThread implements Runnable {
   private String requestBody;
   private String path;
   private CountDownLatch countDownLatch;
+  private boolean isPartTwoEnabled;
 
   public RequestThread(HttpService httpService, SummaryService summaryService, String requestBody,
-      CountDownLatch countDownLatch, String path ) {
+      CountDownLatch countDownLatch, String path, boolean isPartTwoEnabled) {
     this.httpService = httpService;
     this.summaryService = summaryService;
     this.requestBody = requestBody;
     this.countDownLatch = countDownLatch;
     this.path = path;
+    this.isPartTwoEnabled = isPartTwoEnabled;
   }
 
   @Override
   public void run() {
     try {
       Response response = httpService.processHttpRequest(requestBody, path);
-      summaryService.addResponse(response);
+      if(isPartTwoEnabled){
+        summaryService.addResponse(response);
+      }
       countDownLatch.countDown();
       if(random.nextInt(50000)==1){
         System.out.println("Request processing, current remaining: %s".formatted(countDownLatch.getCount()));
