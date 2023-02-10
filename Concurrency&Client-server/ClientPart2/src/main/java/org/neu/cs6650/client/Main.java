@@ -32,17 +32,15 @@ public class Main {
       for (int i = 0; i < requestCount; i++) {
         if (random.nextBoolean()) {
           executorService.execute(new RequestThread(httpService, summaryService,
-              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_LEFT,
-              isPartTwoEnabled));
+              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_LEFT));
         } else {
           executorService.execute(new RequestThread(httpService, summaryService,
-              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_RIGHT,
-              isPartTwoEnabled));
+              objectMapper.writeValueAsString(new Request(random)), countDownLatch, ROUTE_RIGHT));
         }
       }
       executorService.shutdown();
       countDownLatch.await();
-      summaryService.summarize(requestCount);
+      summaryService.summarize(requestCount, threadCount);
     } catch (Exception e) {
       e.printStackTrace();
     }

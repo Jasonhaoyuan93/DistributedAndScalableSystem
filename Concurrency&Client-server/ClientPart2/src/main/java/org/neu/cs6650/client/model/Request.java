@@ -14,7 +14,7 @@ public class Request {
   public Request(Random random) {
     swiper = String.valueOf(random.nextInt(1,5001));
     swipee = String.valueOf(random.nextInt(1,1000001));
-    comment = RandomStringUtils.randomAlphabetic(15, 256);
+    comment = RandomStringUtils.randomAlphabetic(256, 257);
   }
 
   public Request() {

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.math.stat.descriptive.moment.Mean;
 import org.apache.commons.math.stat.descriptive.rank.Max;
 import org.apache.commons.math.stat.descriptive.rank.Median;
 import org.apache.commons.math.stat.descriptive.rank.Min;
@@ -47,7 +48,7 @@ public class SummaryService implements Closeable {
     startTime = System.currentTimeMillis();
   }
 
-  public void summarize(int count) {
+  public void summarize(int count, int threadCount) {
     long totalElapsedTime = System.currentTimeMillis() - startTime;
 
     System.out.println("==================Summary==================");
@@ -57,12 +58,12 @@ public class SummaryService implements Closeable {
     System.out.println("Throughput: %d req/sec".formatted(count*1000 / totalElapsedTime));
 
     if(isPartTwoEnabled){
-      System.out.println("Mean response time: 2%f ms".formatted(
-          elapsedTimes.stream().mapToInt(TimeStore::getElapsedTime).average().getAsDouble()));
+      System.out.println("Mean response time: %f ms".formatted(calculateMean()));
       System.out.println("Median response time: %d ms".formatted(calculateMedian()));
       System.out.println("P99 response time: %d ms".formatted(calculatePercentile()));
       System.out.println("Min response time: %d ms".formatted(calculateMin()));
       System.out.println("Max response time: %d ms".formatted(calculateMax()));
+//      System.out.println("Little\'s law suggested throughput: %f req/sec".formatted(Math.min(200, threadCount)/0.0245));
       //Generate plottable data
       Map<Integer, Integer> occurrence = new HashMap<>();
       elapsedTimes.forEach(val -> {
@@ -117,6 +118,11 @@ public class SummaryService implements Closeable {
   protected int calculateMax() {
     Max max = new Max();
     return (int) max.evaluate(
+        elapsedTimes.stream().mapToDouble(TimeStore::getElapsedTime).toArray());
+  }
+  protected double calculateMean() {
+    Mean mean = new Mean();
+    return mean.evaluate(
         elapsedTimes.stream().mapToDouble(TimeStore::getElapsedTime).toArray());
   }
 }

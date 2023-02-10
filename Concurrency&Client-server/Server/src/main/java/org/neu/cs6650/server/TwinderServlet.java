@@ -73,12 +73,14 @@ public class TwinderServlet extends HttpServlet {
   }
 
   private void isValidRequest(Request request, HttpServletResponse response) throws IOException {
-    if(StringUtils.isBlank(request.getSwipee())){
-      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Missing Swipee ID."));
+    if(StringUtils.isBlank(request.getSwipee())||!StringUtils.isNumeric(request.getSwipee())
+    || Integer.parseInt(request.getSwipee())>1000000||Integer.parseInt(request.getSwipee())<=0){
+      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Invalid Swipee ID."));
       return;
     }
-    if(StringUtils.isBlank(request.getSwiper())){
-      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Missing Swiper ID."));
+    if(StringUtils.isBlank(request.getSwiper())||!StringUtils.isNumeric(request.getSwiper())
+    || Integer.parseInt(request.getSwiper())>5000||Integer.parseInt(request.getSwiper())<=0){
+      handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Invalid Swiper ID."));
       return;
     }
     if(StringUtils.isBlank(request.getComment())){
