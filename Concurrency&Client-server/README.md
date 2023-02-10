@@ -48,12 +48,22 @@ org.neu.cs6650.service package.
 
 ## Client statistics
 ### Part 1
-Running client with 350 threads and 350 HTTP connections. Here's the example screen shot:
 
-![Part 1 image](Part1.jpg)
+To calcualte norminal elapsed time for a http request. I used one thread to process 5000 request.The result screen shot is as follows: 
+
+![Part 1 image](SingleThread.png)
+
+The mean response time is 20.4 ms. Consider 200 threads in tomcat server,
+the theoratical throughput calcualted by the little's law is 8333 req/sec. 
+
+With a few trails, I found that running 250 threads and 250 HTTP connections in the client provide similar result. Here's the screen shot: 
+
+![Part 1 image](Part1.png)
+
+Despite the thread I used is over 200, the theoretical throughput calculated above still holds true because tomcat is using 200 threads. I think the additonal thread in client is just compensating the context switching overhead within remote server.
 
 ### Part 2
-Running client with 350 threads and 350 HTTP connections. Here's the example screen shot:
+Running client with 240 threads and 240 HTTP connections. Here's the example screen shot:
 
 ![Part 2 image](ClientScreenShot.png)
 
@@ -61,12 +71,9 @@ Statistics for multiple trails:
 
 |Overall elapsed time(Sec)|Throughtput (req/sec)|Mean response time(ms)|Median response time(ms)|P99 Response time(ms)|Min response time(ms)|Max response time(ms)|
 |------------------------|--------------------|----------------------|------------------------|-----------------|---------------------|---------------------|
-|51.976|9801|236.24|32|254|13|8059|
-|55.230|9053|238.55|31|257|12|11548|
-|53.468|9351|237.31|31|240|13|15131|
-|52.722|9483|236.81|31|76|12|15158|
-|53.019|9430|237.01|30|78|12|15146|
-|51.595|9690|236.01|30|72|13|15171|
+|59.868|8351|28.61|24|90|12|15139|
+|61.324|8153|29.96|24|247|12|4548|
+|60.621|8247|29.24|24|249|12|3074|
 
 ## Performance Plot
 ![Performance Plot](PerformancePlot.png)
