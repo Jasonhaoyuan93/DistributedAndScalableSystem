@@ -51,7 +51,7 @@ org.neu.cs6650.service package.
 
 To calcualte norminal elapsed time for a http request. I used one thread to process 5000 request.The result screen shot is as follows: 
 
-![Part 1 image](SingleThread.png)
+![Single thread image](SingleThread.png)
 
 The mean response time is 20.4 ms. Consider 200 threads in tomcat server,
 the theoratical throughput calcualted by the little's law is 8333 req/sec. 
