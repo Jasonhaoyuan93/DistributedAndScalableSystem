@@ -16,7 +16,7 @@ public class Main {
   private static final String ROUTE_RIGHT = "/Server_war/twinder/swipe/right";
   private static final Random random = new Random();
   private static final ObjectMapper objectMapper = new ObjectMapper();
-  private static final boolean isPartTwoEnabled = true;
+  private static final boolean isPartTwoEnabled = false;
 
   public static void main(String[] args) {
 
