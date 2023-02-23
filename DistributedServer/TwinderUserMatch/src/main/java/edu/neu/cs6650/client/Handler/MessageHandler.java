@@ -23,7 +23,6 @@ public class MessageHandler implements DeliverCallback {
   @Override
   public void handle(String consumerTag, Delivery message) throws IOException {
     Request request = OBJECT_MAPPER.readValue(message.getBody(), Request.class);
-    System.out.printf(" [+] Message consumed with consumerTag: %s.%n", consumerTag);
     swiperMatchMap.compute(request.getSwipee(), (k,v) -> {
       if(v==null){
         Set<String> matchSet = new HashSet<>();
@@ -34,5 +33,6 @@ public class MessageHandler implements DeliverCallback {
         return  v;
       }
     });
+    System.out.printf(" [+] Message consumed with latency: %d ms.%n", System.currentTimeMillis()- request.getStartTime());
   }
 }

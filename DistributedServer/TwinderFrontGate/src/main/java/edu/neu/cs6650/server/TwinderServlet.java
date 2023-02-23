@@ -2,9 +2,6 @@ package edu.neu.cs6650.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import edu.neu.cs6650.server.model.Request;
 import edu.neu.cs6650.server.model.Response;
 import edu.neu.cs6650.server.service.RMQPublishService;
@@ -17,17 +14,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
 
 @WebServlet(name = "org.neu.cs6650.server.TwinderServlet", value = "/org.neu.cs6650.server.TwinderServlet")
 public class TwinderServlet extends HttpServlet {
 
   private static final String INVALID_PATH_MESSAGE = "invalid path";
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-  private RMQPublishService rmqPublishService;
+  private final RMQPublishService rmqPublishService;
 
   public TwinderServlet() throws IOException, TimeoutException {
 

@@ -12,8 +12,8 @@ import org.neu.cs6650.client.service.SummaryService;
 
 public class Main {
 
-  private static final String ROUTE_LEFT = "/Server_war/twinder/swipe/left";
-  private static final String ROUTE_RIGHT = "/Server_war/twinder/swipe/right";
+  private static final String ROUTE_LEFT = "/TwinderFrontGate_war_exploded/twinder/swipe/left";
+  private static final String ROUTE_RIGHT = "/TwinderFrontGate_war_exploded/twinder/swipe/right";
   private static final Random random = new Random();
   private static final ObjectMapper objectMapper = new ObjectMapper();
   private static final boolean isPartTwoEnabled = true;

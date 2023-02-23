@@ -8,6 +8,8 @@ public class Response extends Request implements Comparable<Response>{
   private boolean isSucceed;
   @JsonIgnore
   private long elapsedTime;
+  private long startTime;
+  private boolean swipeRight;
 
   public Response() {
   }
@@ -31,5 +33,21 @@ public class Response extends Request implements Comparable<Response>{
   @Override
   public int compareTo(Response o) {
     return Math.toIntExact(this.elapsedTime-o.elapsedTime);
+  }
+
+  public long getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(long startTime) {
+    this.startTime = startTime;
+  }
+
+  public boolean isSwipeRight() {
+    return swipeRight;
+  }
+
+  public void setSwipeRight(boolean swipeRight) {
+    this.swipeRight = swipeRight;
   }
 }
