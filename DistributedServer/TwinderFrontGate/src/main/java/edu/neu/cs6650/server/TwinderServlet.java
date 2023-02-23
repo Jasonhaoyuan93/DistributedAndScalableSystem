@@ -1,17 +1,24 @@
-package edu.neu.cs6650;
+package edu.neu.cs6650.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.neu.cs6650.model.Request;
-import edu.neu.cs6650.model.Response;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import edu.neu.cs6650.server.model.Request;
+import edu.neu.cs6650.server.model.Response;
+import edu.neu.cs6650.server.service.RMQPublishService;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericObjectPool;
 
 @WebServlet(name = "org.neu.cs6650.server.TwinderServlet", value = "/org.neu.cs6650.server.TwinderServlet")
 public class TwinderServlet extends HttpServlet {
@@ -19,6 +26,13 @@ public class TwinderServlet extends HttpServlet {
   private static final String INVALID_PATH_MESSAGE = "invalid path";
 
   private ObjectMapper objectMapper = new ObjectMapper();
+
+  private RMQPublishService rmqPublishService;
+
+  public TwinderServlet() throws IOException, TimeoutException {
+
+    rmqPublishService = new RMQPublishService();
+  }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -49,10 +63,21 @@ public class TwinderServlet extends HttpServlet {
         stringBuilder.append(bodyReader.readLine());
       }
       try{
-        Request body = objectMapper.readValue(stringBuilder.toString(), Request.class);
-        isValidRequest(body,response);
+        Request requestBody = objectMapper.readValue(stringBuilder.toString(), Request.class);
+        requestBody.setSwipeRight("right".equalsIgnoreCase(urlParts[2]));
+
+        if(!isValidRequest(requestBody,response)){
+          return;
+        }
+
+        rmqPublishService.publishMessage(requestBody);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        response.getWriter().write(objectMapper.writeValueAsString(requestBody));
+
       }catch (JsonProcessingException e){
         handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response(e.getMessage()));
+      }catch (Exception e){
+        handleError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, new Response(e.getMessage()));
       }
     }
   }
@@ -72,27 +97,21 @@ public class TwinderServlet extends HttpServlet {
     response.getWriter().write(objectMapper.writeValueAsString(payload));
   }
 
-  private void isValidRequest(Request request, HttpServletResponse response) throws IOException {
+  private boolean isValidRequest(Request request, HttpServletResponse response) throws IOException {
     if(StringUtils.isBlank(request.getSwipee())||!StringUtils.isNumeric(request.getSwipee())
     || Integer.parseInt(request.getSwipee())>1000000||Integer.parseInt(request.getSwipee())<=0){
       handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Invalid Swipee ID."));
-      return;
+      return false;
     }
     if(StringUtils.isBlank(request.getSwiper())||!StringUtils.isNumeric(request.getSwiper())
     || Integer.parseInt(request.getSwiper())>5000||Integer.parseInt(request.getSwiper())<=0){
       handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Invalid Swiper ID."));
-      return;
+      return false;
     }
-    if(StringUtils.isBlank(request.getComment())){
-      response.setStatus(HttpServletResponse.SC_CREATED);
-      response.getWriter().write(objectMapper.writeValueAsString(request));
-      return;
-    }
-    if(request.getComment().length()>256){
+    if(!StringUtils.isBlank(request.getComment()) && request.getComment().length()>256){
       handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response("Message length exceed 256."));
-      return;
+      return false;
     }
-    response.setStatus(HttpServletResponse.SC_CREATED);
-    response.getWriter().write(objectMapper.writeValueAsString(request));
+    return true;
   }
 }

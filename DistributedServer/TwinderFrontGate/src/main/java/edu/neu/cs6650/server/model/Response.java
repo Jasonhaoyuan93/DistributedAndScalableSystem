@@ -1,6 +1,6 @@
-package edu.neu.cs6650.model;
+package edu.neu.cs6650.server.model;
 
-public class Response {
+public class Response extends Request{
   private String message;
 
   public Response(String message) {
