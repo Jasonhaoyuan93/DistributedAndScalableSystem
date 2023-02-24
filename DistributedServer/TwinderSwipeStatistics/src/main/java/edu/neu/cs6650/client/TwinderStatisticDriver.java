@@ -20,8 +20,10 @@ public class TwinderStatisticDriver {
     String bindingKey = args[1];
     int prefetchCount = Integer.parseInt(args[2]);
     int threadPoolSize = Integer.parseInt(args[3]);
+    String username = args[4];
+    String password = args[5];
 
-    rmqConnectionSetup(host, prefetchCount);
+    rmqConnectionSetup(host, prefetchCount, username, password);
     System.out.printf(
         " [*] Twinder Statistic Driver initialized with Exchange key=\"%s\", Binding key=\"%s\"%n",
         EXCHANGE_NAME, bindingKey);
@@ -36,9 +38,11 @@ public class TwinderStatisticDriver {
     }
   }
 
-  private static void rmqConnectionSetup(String host, int prefetchCount) throws IOException, TimeoutException {
+  private static void rmqConnectionSetup(String host, int prefetchCount, String username, String password) throws IOException, TimeoutException {
     ConnectionFactory factory = new ConnectionFactory();
     factory.setHost(host);
+    factory.setUsername(username);
+    factory.setPassword(password);
     Connection connection = factory.newConnection();
 
     rmqChannel = connection.createChannel();
