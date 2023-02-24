@@ -20,9 +20,9 @@ public class RMQPublishService {
 
   public RMQPublishService() throws IOException, TimeoutException {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost("34.222.62.18");
-    factory.setUsername("jasonhaoyuan");
-    factory.setPassword("Yh19930718!");
+    factory.setHost("127.0.0.1");
+    factory.setUsername("guest");
+    factory.setPassword("guest");
     RMQChannelFactory rmqChannelFactory = new RMQChannelFactory(factory.newConnection());
     rmqChannelPool = new GenericObjectPool<>(rmqChannelFactory,200);
   }
