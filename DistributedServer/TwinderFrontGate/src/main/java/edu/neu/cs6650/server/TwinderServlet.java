@@ -72,6 +72,7 @@ public class TwinderServlet extends HttpServlet {
       }catch (JsonProcessingException e){
         handleError(response, HttpServletResponse.SC_BAD_REQUEST, new Response(e.getMessage()));
       }catch (Exception e){
+        e.printStackTrace();
         handleError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, new Response(e.getMessage()));
       }
     }
