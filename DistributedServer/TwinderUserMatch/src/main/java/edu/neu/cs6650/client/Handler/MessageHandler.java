@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageHandler implements DeliverCallback {
 
@@ -28,10 +27,11 @@ public class MessageHandler implements DeliverCallback {
         Set<String> matchSet = new HashSet<>();
         matchSet.add(request.getSwiper());
         return matchSet;
-      }else{
+      }else if(v.size()<100){
         v.add(request.getSwiper());
         return  v;
       }
+      return v;
     });
     System.out.printf(" [+] Message consumed with latency: %d ms.%n", System.currentTimeMillis()- request.getStartTime());
   }
