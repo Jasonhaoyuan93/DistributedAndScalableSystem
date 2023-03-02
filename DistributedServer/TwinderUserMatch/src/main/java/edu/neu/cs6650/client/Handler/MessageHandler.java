@@ -13,22 +13,22 @@ public class MessageHandler implements DeliverCallback {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  private final Map<String, Set<String>> swiperMatchMap;
+  private final Map<String, Set<Integer>> swiperMatchMap;
 
-  public MessageHandler(Map<String, Set<String>> swiperMatchMap) {
+  public MessageHandler(Map<String, Set<Integer>> swiperMatchMap) {
     this.swiperMatchMap = swiperMatchMap;
   }
 
   @Override
   public void handle(String consumerTag, Delivery message) throws IOException {
     Request request = OBJECT_MAPPER.readValue(message.getBody(), Request.class);
-    swiperMatchMap.compute(request.getSwipee(), (k,v) -> {
+    swiperMatchMap.compute(request.getSwiper(), (k,v) -> {
       if(v==null){
-        Set<String> matchSet = new HashSet<>();
-        matchSet.add(request.getSwiper());
+        Set<Integer> matchSet = new HashSet<>();
+        matchSet.add(Integer.parseInt(request.getSwipee()));
         return matchSet;
       }else if(v.size()<100){
-        v.add(request.getSwiper());
+        v.add(Integer.parseInt(request.getSwipee()));
         return  v;
       }
       return v;

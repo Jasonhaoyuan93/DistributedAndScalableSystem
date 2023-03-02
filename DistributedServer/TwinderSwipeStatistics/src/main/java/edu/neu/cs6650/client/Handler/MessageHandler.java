@@ -7,7 +7,6 @@ import edu.neu.cs6650.client.model.Request;
 import edu.neu.cs6650.client.model.SwipeRecord;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageHandler implements DeliverCallback {
 

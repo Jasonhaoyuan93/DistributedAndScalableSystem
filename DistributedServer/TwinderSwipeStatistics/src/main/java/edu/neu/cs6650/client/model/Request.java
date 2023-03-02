@@ -1,7 +1,5 @@
 package edu.neu.cs6650.client.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class Request {
   private String swiper;
   private String swipee;
