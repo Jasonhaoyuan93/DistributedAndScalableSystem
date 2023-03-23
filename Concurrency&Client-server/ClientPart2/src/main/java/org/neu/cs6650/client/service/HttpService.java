@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.routing.HttpRoute;
@@ -24,11 +25,18 @@ public class HttpService implements Closeable {
   private HttpHost httpHost;
 
   public HttpService(int connectionCount, String hostRoute) {
+    int timeout = 100;
     PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+    RequestConfig config = RequestConfig.custom()
+        .setConnectTimeout(timeout * 1000)
+        .setConnectionRequestTimeout(timeout * 1000)
+        .setSocketTimeout(timeout * 1000).build();
+
     connectionManager.setMaxTotal(connectionCount);
     this.httpHost = new HttpHost(hostRoute, 8080);
     connectionManager.setMaxPerRoute(new HttpRoute(httpHost), connectionCount);
     this.httpClient = HttpClients.custom().setConnectionManager(connectionManager)
+        .setDefaultRequestConfig(config)
         .addInterceptorLast((HttpResponseInterceptor) (httpResponse, httpContext) -> {
           if (httpResponse.getStatusLine().getStatusCode() / 100 >= 4) {
             System.out.println("retried");

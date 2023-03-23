@@ -68,7 +68,8 @@ Request class is the POJO that request from RabbitMQ deserialized to.
 
         #So far, the example setup haven't meet any performance bottle neck for publishing rate below 8000 req/sec
 
-
+### Consumer Optimized Setup
+The optimized setup I found was using 16 threads(consumers) with prefetch count equals to 20 in one consumer App.
 
 ## Load Testing Results
 
