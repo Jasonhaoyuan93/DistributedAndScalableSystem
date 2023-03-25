@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
-@WebServlet(name = "org.neu.cs6650.server.TwinderServlet", value = "/org.neu.cs6650.server.TwinderServlet")
+@WebServlet(name = "edu.neu.cs6650.server.TwinderServlet", value = "/edu.neu.cs6650.server.TwinderServlet")
 public class TwinderServlet extends HttpServlet {
 
   private static final String INVALID_PATH_MESSAGE = "invalid path";
