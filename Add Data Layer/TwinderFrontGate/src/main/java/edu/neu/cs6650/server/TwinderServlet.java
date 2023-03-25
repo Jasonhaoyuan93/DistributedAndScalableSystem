@@ -2,23 +2,21 @@ package edu.neu.cs6650.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.neu.cs6650.server.model.MatchResponse;
 import edu.neu.cs6650.server.model.Request;
 import edu.neu.cs6650.server.model.Response;
-import edu.neu.cs6650.server.model.StatsResponse;
 import edu.neu.cs6650.server.service.RMQPublishService;
 import edu.neu.cs6650.server.service.TwinderMatchService;
 import edu.neu.cs6650.server.service.TwinderStatsService;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 @WebServlet(name = "edu.neu.cs6650.server.TwinderServlet", value = "/edu.neu.cs6650.server.TwinderServlet")
 public class TwinderServlet extends HttpServlet {

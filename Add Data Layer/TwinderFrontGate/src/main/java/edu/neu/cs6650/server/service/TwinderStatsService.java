@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.neu.cs6650.server.dao.TwinderDAO;
 import edu.neu.cs6650.server.model.MessageResponse;
 import edu.neu.cs6650.server.model.StatsResponse;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.servlet.http.HttpServletResponse;
 
 public class TwinderStatsService {
 
