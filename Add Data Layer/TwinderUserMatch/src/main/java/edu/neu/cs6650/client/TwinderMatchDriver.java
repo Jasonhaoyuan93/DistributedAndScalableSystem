@@ -6,7 +6,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import edu.neu.cs6650.client.Handler.MessageHandler;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 
 public class TwinderMatchDriver {
@@ -32,7 +31,7 @@ public class TwinderMatchDriver {
     rmqChannel.queueBind(QUEUE_NAME, EXCHANGE_NAME, bindingKey);
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-    MessageHandler messageHandler = new MessageHandler(new ConcurrentHashMap<>());
+    MessageHandler messageHandler = new MessageHandler();
     for (int i = 0; i < threadPoolSize; i++) {
       rmqChannel.basicConsume(QUEUE_NAME, true, messageHandler, consumerTag -> {
       });

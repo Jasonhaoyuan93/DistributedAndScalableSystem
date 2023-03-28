@@ -3,37 +3,33 @@ package edu.neu.cs6650.client.Handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.DeliverCallback;
 import com.rabbitmq.client.Delivery;
+import edu.neu.cs6650.client.dao.TwinderDAO;
 import edu.neu.cs6650.client.model.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.sql.SQLException;
 
 public class MessageHandler implements DeliverCallback {
 
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
 
-  private final Map<String, Set<Integer>> swiperMatchMap;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  public MessageHandler(Map<String, Set<Integer>> swiperMatchMap) {
-    this.swiperMatchMap = swiperMatchMap;
-  }
+    private final TwinderDAO twinderDAO = TwinderDAO.getInstance();
 
-  @Override
-  public void handle(String consumerTag, Delivery message) throws IOException {
-    Request request = OBJECT_MAPPER.readValue(message.getBody(), Request.class);
-    swiperMatchMap.compute(request.getSwiper(), (k,v) -> {
-      if(v==null){
-        Set<Integer> matchSet = new HashSet<>();
-        matchSet.add(Integer.parseInt(request.getSwipee()));
-        return matchSet;
-      }else if(v.size()<100){
-        v.add(Integer.parseInt(request.getSwipee()));
-        return  v;
-      }
-      return v;
-    });
-    System.out.printf(" [+] Message consumed with latency: %d ms.%n", System.currentTimeMillis()- request.getStartTime());
-  }
+    @Override
+    public void handle(String consumerTag, Delivery message) throws IOException {
+        Request request = OBJECT_MAPPER.readValue(message.getBody(), Request.class);
+        long startTime = System.currentTimeMillis();
+        try {
+            twinderDAO.insertMatches(Integer.parseInt(request.getSwiper()), Integer.parseInt(request.getSwipee()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            logger.error("Error occur when inserting to DB with cause: " + e.getMessage());
+        }
+        System.out.printf(" [+] Message consumed with DB latency = %d ms and overall latency: %d ms.%n",
+                System.currentTimeMillis() - startTime, System.currentTimeMillis() - request.getStartTime());
+    }
 }

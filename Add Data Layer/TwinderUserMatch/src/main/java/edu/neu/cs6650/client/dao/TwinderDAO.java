@@ -9,26 +9,24 @@ import java.sql.SQLException;
 
 public class TwinderDAO {
 
-  private static final String MATCH_QUERY = "insert into twinder.twinder_matches(swiper_id,swipee_id) values (?,?) ";
+  private static final String MATCH_QUERY = "insert into twinder.twinder_matches(swiper_id,swipee_id) values (?,?) on duplicate key update swipe_date = default";
 
   private static TwinderDAO cachedTwinderDAO;
-  private static HikariConfig dbConfig ;
   private static HikariDataSource dataSource;
 
   private TwinderDAO() {
-    String url = "jdbc:mysql://localhost:3306/Twinder";
+    String url = "jdbc link";
     String username = "root";
-//    String password = "root";
-    dbConfig = new HikariConfig();
+    String password = "pass";
+    HikariConfig dbConfig = new HikariConfig();
     dbConfig.setJdbcUrl(url);
     dbConfig.setUsername(username);
-//    dbConfig.setPassword(password);
+    dbConfig.setPassword(password);
     dbConfig.addDataSourceProperty("cachePrepStmts", "true");
     dbConfig.addDataSourceProperty("prepStmtCacheSize", "250");
     dbConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-    dbConfig.addDataSourceProperty("readOnly", "true");
     dbConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-    dbConfig.setSchema("Twinder");
+    dbConfig.setAutoCommit(true);
     dataSource = new HikariDataSource(dbConfig);
   }
 
@@ -44,7 +42,7 @@ public class TwinderDAO {
         PreparedStatement queryMatches = conn.prepareStatement(MATCH_QUERY)){
         queryMatches.setLong(1,swiper_id);
         queryMatches.setLong(2,swipee_id);
-        queryMatches.executeQuery();
+        queryMatches.executeUpdate();
     }
   }
 }
