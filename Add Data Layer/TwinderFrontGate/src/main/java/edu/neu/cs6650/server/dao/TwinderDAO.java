@@ -17,23 +17,21 @@ public class TwinderDAO {
   private static final String MATCH_QUERY = "select swiper_id from twinder_matches where swipee_id = ?";
 
   private static TwinderDAO cachedTwinderDAO;
-  private static HikariConfig dbConfig ;
   private static HikariDataSource dataSource;
 
   private TwinderDAO() {
-    String url = "jdbc:mysql://localhost:3306/Twinder";
-    String username = "root";
-//    String password = "root";
-    dbConfig = new HikariConfig();
+    String url = "jdbc link";
+    String username = "user";
+    String password = "pass";
+    HikariConfig dbConfig = new HikariConfig();
     dbConfig.setJdbcUrl(url);
     dbConfig.setUsername(username);
-//    dbConfig.setPassword(password);
+    dbConfig.setPassword(password);
     dbConfig.addDataSourceProperty("cachePrepStmts", "true");
     dbConfig.addDataSourceProperty("prepStmtCacheSize", "250");
     dbConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
     dbConfig.addDataSourceProperty("readOnly", "true");
     dbConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-    dbConfig.setSchema("Twinder");
     dataSource = new HikariDataSource(dbConfig);
   }
 
