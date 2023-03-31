@@ -4,8 +4,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import edu.neu.cs6650.client.Handler.MessageHandler;
-
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 public class TwinderStatisticDriver {
@@ -31,7 +32,9 @@ public class TwinderStatisticDriver {
     rmqChannel.queueBind(QUEUE_NAME, EXCHANGE_NAME, bindingKey);
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-    MessageHandler messageHandler = new MessageHandler();
+    ExecutorService executorService = new ScheduledThreadPoolExecutor(threadPoolSize*6);
+
+    MessageHandler messageHandler = new MessageHandler(executorService);
     for (int i = 0; i < threadPoolSize; i++) {
       rmqChannel.basicConsume(QUEUE_NAME, true, messageHandler, consumerTag -> {
       });
@@ -48,6 +51,6 @@ public class TwinderStatisticDriver {
     rmqChannel = connection.createChannel();
     rmqChannel.basicQos(prefetchCount);
     rmqChannel.exchangeDeclare(EXCHANGE_NAME, "topic");
-    rmqChannel.queueDeclare(QUEUE_NAME, false, false, false, null);
+    rmqChannel.queueDeclare(QUEUE_NAME, true, false, false, null);
   }
 }
