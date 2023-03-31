@@ -6,12 +6,11 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import edu.neu.cs6650.server.RMQChannelFactory;
 import edu.neu.cs6650.server.model.Request;
-import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 
 public class RMQPublishService implements AutoCloseable{
@@ -23,9 +22,9 @@ public class RMQPublishService implements AutoCloseable{
 
   public RMQPublishService() throws IOException, TimeoutException {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost("localhost");
-    factory.setUsername("guest");
-    factory.setPassword("guest");
+    factory.setHost(System.getProperty("rmqHost","127.0.0.1"));
+    factory.setUsername(System.getProperty("rmqUsername","guest"));
+    factory.setPassword(System.getProperty("rmqPassword","guest"));
     rmqConnection = factory.newConnection();
     RMQChannelFactory rmqChannelFactory = new RMQChannelFactory(rmqConnection);
     GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig();
@@ -45,8 +44,10 @@ public class RMQPublishService implements AutoCloseable{
       request.setStartTime(System.currentTimeMillis());
       String message = OBJECT_MAPPER.writeValueAsString(request);
 //      System.out.println(" [+] Publishing message to %s with routingKey=%s.".formatted(EXCHANGE_NAME,routingKey));
+      long startTime = System.currentTimeMillis();
       rmqChannel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes(
           StandardCharsets.UTF_8));
+      System.out.println("Published to rabbitMQ with elapsed time: %d".formatted(System.currentTimeMillis()-startTime));
     }finally {
       try {
         if (rmqChannel!=null) {

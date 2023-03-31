@@ -2,26 +2,29 @@ package edu.neu.cs6650.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.neu.cs6650.server.dao.TwinderDAO;
+import edu.neu.cs6650.server.dao.TwinderDynamodbDAO;
+import edu.neu.cs6650.server.dao.TwinderMysqlDAO;
 import edu.neu.cs6650.server.model.Request;
 import edu.neu.cs6650.server.model.Response;
 import edu.neu.cs6650.server.service.RMQPublishService;
 import edu.neu.cs6650.server.service.TwinderMatchService;
 import edu.neu.cs6650.server.service.TwinderStatsService;
-import org.apache.commons.lang3.StringUtils;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import org.apache.commons.lang3.StringUtils;
 
 @WebServlet(name = "edu.neu.cs6650.server.TwinderServlet", value = "/edu.neu.cs6650.server.TwinderServlet")
 public class TwinderServlet extends HttpServlet {
 
   private static final String INVALID_PATH_MESSAGE = "invalid path";
+  private static final String TRUE = "true";
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final RMQPublishService rmqPublishService;
@@ -29,8 +32,11 @@ public class TwinderServlet extends HttpServlet {
   private final TwinderStatsService twinderStatsService;
 
   public TwinderServlet() throws IOException, TimeoutException {
-    twinderMatchService = new TwinderMatchService();
-    twinderStatsService = new TwinderStatsService();
+
+    TwinderDAO twinderDAO = TRUE.equalsIgnoreCase(System.getProperty("DynamoDBEnabled","false"))?
+        new TwinderDynamodbDAO(): new TwinderMysqlDAO();
+    twinderMatchService = new TwinderMatchService(twinderDAO);
+    twinderStatsService = new TwinderStatsService(twinderDAO);
     rmqPublishService = new RMQPublishService();
   }
 
@@ -66,11 +72,9 @@ public class TwinderServlet extends HttpServlet {
           twinderStatsService.obtainStatsWithUID(uid, response);
         }
       }
-    }catch(NumberFormatException e){
+    }catch(Exception e){
       handleError(response,HttpServletResponse.SC_BAD_REQUEST, new Response("Malformed user ID"));
     }
-
-
   }
 
   @Override
