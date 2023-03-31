@@ -2,21 +2,21 @@ package edu.neu.cs6650.server.model;
 
 public class StatsResponse {
 
-  private long numlikes;
+  private long numLikes;
 
   private long numDislikes;
 
-  public StatsResponse(long numlikes, long numDislikes) {
-    this.numlikes = numlikes;
+  public StatsResponse(long numLikes, long numDislikes) {
+    this.numLikes = numLikes;
     this.numDislikes = numDislikes;
   }
 
-  public long getNumlikes() {
-    return numlikes;
+  public long getNumLikes() {
+    return numLikes;
   }
 
-  public void setNumlikes(long numlikes) {
-    this.numlikes = numlikes;
+  public void setNumLikes(long numLikes) {
+    this.numLikes = numLikes;
   }
 
   public long getNumDislikes() {

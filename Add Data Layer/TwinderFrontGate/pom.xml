@@ -76,6 +76,12 @@
       <artifactId>mysql-connector-j</artifactId>
       <version>8.0.32</version>
     </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>dynamodb</artifactId>
+      <version>2.20.32</version>
+    </dependency>
+
 
   </dependencies>
 

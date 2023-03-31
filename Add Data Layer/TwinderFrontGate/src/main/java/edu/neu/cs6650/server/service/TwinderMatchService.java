@@ -4,20 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.neu.cs6650.server.dao.TwinderDAO;
 import edu.neu.cs6650.server.model.MatchResponse;
 import edu.neu.cs6650.server.model.MessageResponse;
-
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
 
 public class TwinderMatchService {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final TwinderDAO twinderDAO;
-  public TwinderMatchService() {
-    twinderDAO = TwinderDAO.getInstance();
+  public TwinderMatchService(TwinderDAO twinderDAO) {
+    this.twinderDAO = twinderDAO;
   }
 
-  public void findMatches(int uid, HttpServletResponse httpServletResponse) throws IOException {
+  public void findMatches(int uid, HttpServletResponse httpServletResponse){
     MatchResponse matches = null;
     try {
       matches = twinderDAO.obtainMatchesBaseOnUID(uid);
@@ -28,7 +25,7 @@ public class TwinderMatchService {
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.getWriter().write(objectMapper.writeValueAsString(matches));
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
