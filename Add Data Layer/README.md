@@ -16,7 +16,7 @@ This assignment builds on assignment 2. The main aim is to persist the swipes ge
 Here's the diagram of my architecture. Basically, I used the RabbitMQ as the TempStore and utilize dynamoDB as the database to persisted all data. The Front Gate application will query DB for all get requests while send all post requests to rabbitMQ for async process. 
 ![CS6650 Assignment3 Architectural Diagram](ArchitecturalDiagram.jpg)
 
-- With one consumer for each queue, I've observed that requests were stacking up in the queue. My conclusion is that the additional DB persistence feature has negatively impacted the consumption rate of consumption. So I increased the number of consumers for both statistic queue and match queue. 
+- With one consumer for each queue, I've observed that requests were stacking up in the queue. My conclusion is that the additional DB persistence feature has negatively impacted the rate of consumption. So I increased the number of consumers for both statistic queue and match queue. 
 - Initially, I chose Mysql as DB but its write throughput is capped at around 1000 write/sec. Yet, the publishing rate requires around 9000 write/sec to keep a clear queue. So I switched to DynamoDB, where I can use on-demand read and write unit to accommodate different consumption rate. 
 
 ### Database Design
@@ -27,7 +27,7 @@ The DB structure in DynamoDB is shown below. I created two tables with respect t
 |twinder_stats|user_id(N)|N/A|num_like(N)|num_dislike(N)|
 |twinder_matches|swipee_id(N)|swiper_id(N)|N/A|N/A|
 
-DynamoDB is fast when searching with either partition key or sort key by default. Due to the nature of our functionality, I don't have to define additional index like mysql to boost up the performance. Partition key along with sort key composed a primary key within DynamoDB, so my twinder_match table is guarded from duplication. 
+DynamoDB is fast when searching with either partition key or sort key by default. Due to the nature of our functionality, I don't have to define additional index like it in mysql to boost up the performance. Partition key along with sort key composed a primary key within DynamoDB, so my twinder_match table is guarded from duplication. 
 
 ### Deployment Topology on AWS
 To deploy the entire infrastructure, we need to deploy RabbitMQ first. After that, we can deploy consumer and load balancer at the same time. Finally, deploy the front gates and register them into the load balancer. 
